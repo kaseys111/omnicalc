@@ -62,13 +62,99 @@ class CalculationsController < ApplicationController
     #   So if you subtract one time from another, you will get an integer
     #   number of seconds as a result.
     # ================================================================================
+    #seconds
+    seconds = @ending - @starting
 
-    @seconds = "Replace this string with your answer."
-    @minutes = "Replace this string with your answer."
-    @hours = "Replace this string with your answer."
-    @days = "Replace this string with your answer."
-    @weeks = "Replace this string with your answer."
-    @years = "Replace this string with your answer."
+    s_comma = seconds.to_i.to_s.partition('.')
+    n = s_comma[0].length - 3
+
+    while n > 0
+    	s_comma[0].insert(n, ',')
+    	n = n-3
+    end
+
+    #minutes
+    minutes = seconds/60
+
+    m_comma = minutes.to_i.to_s.partition('.')
+    n = m_comma[0].length - 3
+
+    while n > 0
+      m_comma[0].insert(n, ',')
+      n = n-3
+    end
+
+    #hours
+    hours = seconds/60/60
+
+    h_comma = hours.round(2).to_s.partition('.')
+    n = h_comma[0].length - 3
+
+    while n > 0
+      h_comma[0].insert(n, ',')
+      n = n-3
+    end
+
+    #days
+    days = seconds/60/60/24
+
+    d_comma = days.round(2).to_s.partition('.')
+    n = d_comma[0].length - 3
+
+    while n > 0
+      d_comma[0].insert(n, ',')
+      n = n-3
+    end
+
+    #weeks
+    weeks = seconds/60/60/24/7
+
+    w_comma = weeks.round(2).to_s.partition('.')
+    n = w_comma[0].length - 3
+
+    while n > 0
+      w_comma[0].insert(n, ',')
+      n = n-3
+    end
+
+    #years
+    end_yr = @ending.year
+    begin_yr = @starting.year
+    yrs = end_yr - begin_yr
+    leaps = []
+
+    while begin_yr<(end_yr+1)
+    	mod4   = begin_yr%4   ==0
+    	mod100 = begin_yr%100 ==0
+    	mod400 = begin_yr%400 ==0
+    	if mod4==true
+    		if mod100==false || mod400==true
+    			leaps.push(begin_yr)
+    		end
+    	end
+    	begin_yr+=1
+    end
+
+    no_leaps = leaps.length
+    no_nonleaps = yrs - no_leaps
+    avg_yr_length = (365*no_nonleaps + 366*no_leaps)/yrs
+
+    years = seconds/60/60/24/avg_yr_length.to_f
+
+    y_comma = years.round(2).to_s.partition('.')
+    n = y_comma[0].length - 3
+
+    while n > 0
+      y_comma[0].insert(n, ',')
+      n = n-3
+    end
+
+    @seconds = s_comma[0] + s_comma[1] + s_comma[2]
+    @minutes = m_comma[0] + m_comma[1] + m_comma[2]
+    @hours = h_comma[0] + h_comma[1] + h_comma[2]
+    @days = d_comma[0] + d_comma[1] + d_comma[2]
+    @weeks = w_comma[0] + w_comma[1] + w_comma[2]
+    @years = y_comma[0] + y_comma[1] + y_comma[2]
 
     # ================================================================================
     # Your code goes above.

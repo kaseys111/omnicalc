@@ -10,6 +10,8 @@ class CalculationsController < ApplicationController
     # The special word the user input is in the string @special_word.
     # ================================================================================
 
+    # FIX
+    # Can't currently accommodate punctuation
 
     @character_count_with_spaces = @text.length
 
@@ -62,7 +64,8 @@ class CalculationsController < ApplicationController
     #   So if you subtract one time from another, you will get an integer
     #   number of seconds as a result.
     # ================================================================================
-    #seconds
+
+    # seconds
     seconds = @ending - @starting
 
     s_comma = seconds.to_i.to_s.partition('.')
@@ -73,7 +76,7 @@ class CalculationsController < ApplicationController
     	n = n-3
     end
 
-    #minutes
+    # minutes
     minutes = seconds/60
 
     m_comma = minutes.to_i.to_s.partition('.')
@@ -84,7 +87,7 @@ class CalculationsController < ApplicationController
       n = n-3
     end
 
-    #hours
+    # hours
     hours = seconds/60/60
 
     h_comma = hours.round(2).to_s.partition('.')
@@ -95,7 +98,7 @@ class CalculationsController < ApplicationController
       n = n-3
     end
 
-    #days
+    # days
     days = seconds/60/60/24
 
     d_comma = days.round(2).to_s.partition('.')
@@ -106,7 +109,7 @@ class CalculationsController < ApplicationController
       n = n-3
     end
 
-    #weeks
+    # weeks
     weeks = seconds/60/60/24/7
 
     w_comma = weeks.round(2).to_s.partition('.')
@@ -117,7 +120,7 @@ class CalculationsController < ApplicationController
       n = n-3
     end
 
-    #years
+    # years
     end_yr = @ending.year
     begin_yr = @starting.year
     yrs = end_yr - begin_yr
@@ -171,27 +174,63 @@ class CalculationsController < ApplicationController
     # The numbers the user input are in the array @numbers.
     # ================================================================================
 
-    @sorted_numbers = "Replace this string with your answer."
+    @sorted_numbers = @numbers.sort
 
-    @count = "Replace this string with your answer."
+    @count = @numbers.length
 
-    @minimum = "Replace this string with your answer."
+    @minimum = @numbers.min
 
-    @maximum = "Replace this string with your answer."
+    @maximum = @numbers.max
 
-    @range = "Replace this string with your answer."
+    @range = @maximum - @minimum
 
-    @median = "Replace this string with your answer."
+    # median
+    if @count.odd? == true
+      median = @numbers.sort[(@count-1)/2]
+    elsif @count.odd? == false
+      low = @numbers.sort[((@count/2)-1).to_i]
+      high = @numbers.sort[(@count/2).to_i]
+      median = (high + low)/2
+    end
 
-    @sum = "Replace this string with your answer."
+    @median = median
 
-    @mean = "Replace this string with your answer."
+    # sum
+    sum = 0
 
-    @variance = "Replace this string with your answer."
+    @numbers.each do |no|
+      sum = sum + no
+    end
 
-    @standard_deviation = "Replace this string with your answer."
+    @sum = sum.round(4)
 
-    @mode = "Replace this string with your answer."
+    @mean = (@sum / @numbers.length).round(4)
+
+    # variance
+    vars = []
+
+    @numbers.each do |no|
+      vars.push((@mean - no)**2)
+    end
+
+    sum_squares = 0
+
+    vars.each do |squares|
+      sum_squares = sum_squares + squares
+    end
+
+    @variance = (sum_squares / vars.length).round(4)
+
+    @standard_deviation = Math.sqrt(@variance).round(4)
+
+    # mode
+    times = []
+
+    @numbers.each do |no|
+      times.push(@numbers.count(no))
+    end
+
+    @mode = @numbers[times.index(times.max)]
 
     # ================================================================================
     # Your code goes above.
